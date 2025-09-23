@@ -1,0 +1,103 @@
+---
+title: "Clusterización"
+author: "Christian Amaro INEGI"
+date: "2025-07-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+options(scipen = 999)
+
+
+```
+
+```{r}
+# Se cargan las librerías y el df con el que se va a trabajar
+
+library(dplyr)
+library(tidyverse)
+library(caTools)
+library(KMEANS.KNN)
+library(cluster)
+library(ggplot2)
+#library(esquisse)
+library(readxl)
+
+
+
+# Nota, para este ejercicio se usan datos simulados, no reales
+
+read_xlsx("captacion simulada act.xlsx")
+#df <- tabla_ganaderia_gp
+
+df <- read_xlsx("captacion simulada act.xlsx")
+
+df
+
+df_ov <- df %>% filter(PRODUCTO == "Nopal verdura")
+```
+
+
+```{r}
+# Cómo será un análisis univariado solo se va a trabajar con la proporción de existencias de bovinos
+
+
+
+
+df_ov <- df_ov %>% filter()%>% select(ID,CONSECUTIVO, PRODUCCION_C)
+
+# Se cambian los NA's por ceros
+
+df_ov$PRODUCCION_C <- ifelse(is.na(df_ov$PRODUCCION_C), 0, df_ov$PRODUCCION_C )
+```
+
+
+```{r}
+
+# Se calculan las distancias euclideanas y se usa algoritmo de kmeans
+
+kmeans_clustered <- kmeans(x = df_ov$PRODUCCION_C, centers = 1, iter.max = 20)
+
+
+## Se obtienen los centroides 
+centroide <- as.data.frame(kmeans_clustered$centers)
+
+## Medidas de dispersión 
+df_ov <- df_ov %>% mutate(distancias_cent = PRODUCCION_C - centroide$V1)
+media <- mean(df_ov$distancias_cent)
+desvest <- sd(df_ov$distancias_cent)
+
+# Factor para cálculo de atípicos
+atip_arriba <- media + 3 * desvest
+atip_debajo <- media - 3 * desvest
+ atip_arriba
+ atip_debajo 
+ 
+ 
+# Se categorizan los valores. 1 outlier 0 no outlier 
+ df_ov$atipico <- case_when(
+   df_ov$distancias_cent > atip_arriba ~ 1,
+   df_ov$distancias_cent < atip_debajo ~ 1,
+   TRUE ~ 0
+ )
+ 
+# Gráfico para atípicos 
+ 
+ggplot(data = df_ov) + aes(x = PRODUCCION_C, y = "", colour = atipico) + geom_point() 
+
+# Tabla de frecuencias para atípicos 
+
+tabla <- data.frame(table(df_ov$atipico))
+
+colnames(tabla) <- c("Tipo de dato", "Frecuencia")
+
+knitr::kable(tabla)
+
+ atip <- view(df_ov %>% filter(atipico == 1) )
+
+
+ 
+ 
+```
