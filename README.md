@@ -1,12 +1,12 @@
-Clustering and Outlier Detection in Simulated Data
+# Clustering and Outlier Detection in Simulated Data
 
-Author: Christian Amaro 
+## Author: Christian Amaro 
 
-Project Description
+## Project Description
 
 This project demonstrates a reproducible workflow in R to identify outliers in a simulated dataset. The analysis focuses on agricultural production data (example: Nopal verdura) and applies a univariate approach to detect anomalies.
 
-The process includes:
+## The process includes:
 
 - Data loading and preprocessing: importing an Excel file, filtering a subset of interest, and replacing missing values with zeros.
 
@@ -18,11 +18,11 @@ The process includes:
 
 This workflow illustrates how to approach data cleaning, exploratory analysis, and anomaly detection in numeric variables.
 
-Technologies
+# Technologies
 
 Language: R
 
-Packages:
+## Packages:
 
 - dplyr and tidyverse for data manipulation
 
@@ -33,7 +33,7 @@ Packages:
 - cluster, KMEANS.KNN, caTools as supporting packages
 
 
-Usage
+# Usage
 
 Clone this repository.
 
