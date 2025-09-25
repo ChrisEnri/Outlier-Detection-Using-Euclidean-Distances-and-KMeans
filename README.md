@@ -1,3 +1,5 @@
+![R](https://img.shields.io/badge/language-R-blue)
+
 # Clustering and Outlier Detection in Simulated Data
 
 ## Author: Christian Amaro 
